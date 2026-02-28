@@ -1,27 +1,29 @@
-package com.practice.mallpractice.model;
-
+package com.practice.mallpractice.dto;
 
 import com.practice.mallpractice.constant.ProductCategory;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Date;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class Product {
+public class ProductRequest {
 
-    private Integer productId;
+    // 前端要傳的參數
+    @NotNull
     private String productName;
+
+    @NotNull
     private ProductCategory category;
+
+    @NotNull
     private String imageUrl;
+
+    @NotNull
     private Integer price;
+
+    @NotNull
     private Integer stock;
+
     private String description;
-    private Date createDate;
-    private Date lastModifiedDate;
 }
