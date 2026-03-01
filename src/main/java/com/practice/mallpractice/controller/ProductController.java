@@ -17,9 +17,9 @@ public class ProductController {
 
     @GetMapping("/products/{productId}")
     public ResponseEntity<Product> getProduct(
-            @PathVariable Integer productId){
+            @PathVariable Integer productId) {
         Product product = productService.getProductById(productId);
-        if (product != null){
+        if (product != null) {
             return ResponseEntity.status(HttpStatus.OK).body(product);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -27,11 +27,37 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public ResponseEntity<Product> postProduct(@RequestBody @Valid ProductRequest productRequest){
+    public ResponseEntity<Product> postProduct(@RequestBody @Valid ProductRequest productRequest) {
         Integer productId = productService.createProduct(productRequest);
 
         Product product = productService.getProductById(productId);
 
-        return  ResponseEntity.status(HttpStatus.CREATED).body(product);
+        return ResponseEntity.status(HttpStatus.CREATED).body(product);
+    }
+
+    @PutMapping("/products/{productId}")
+    public ResponseEntity<Product> updateProductID(@PathVariable Integer productId,
+                                                   @RequestBody @Valid ProductRequest productRequest) {
+        // 檢查product是否存在
+        Product product = productService.getProductById(productId);
+        if (product == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        productService.updateProduct(productId, productRequest);
+
+        Product updateProduct = productService.getProductById(productId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(updateProduct);
+
+
+    }
+
+
+    @DeleteMapping("/products/{productId}")
+    public ResponseEntity<?> deleteProductId(@PathVariable Integer productId) {
+        productService.deleteProductById(productId);
+
+        // 確定結果，商品消失
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -8,4 +8,8 @@ public interface ProductDao {
     Product getProductById(Integer productId);
 
     Integer createProduct(ProductRequest productRequest);
+
+    void updateById(Integer productId, ProductRequest productRequest);
+
+    void deleteProductById(Integer productUd);
 }
