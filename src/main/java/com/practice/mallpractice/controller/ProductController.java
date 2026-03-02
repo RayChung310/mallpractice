@@ -5,6 +5,7 @@ import com.practice.mallpractice.dto.ProductQueryParams;
 import com.practice.mallpractice.dto.ProductRequest;
 import com.practice.mallpractice.model.Product;
 import com.practice.mallpractice.service.ProductService;
+import com.practice.mallpractice.util.Page;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -25,7 +26,7 @@ public class ProductController {
 
     // 查詢商品列表
     @GetMapping("/products")
-    public ResponseEntity<List<Product>> getProducts(
+    public ResponseEntity<Page<Product>> getProducts(
             // 查詢條件 Filter
             @RequestParam(required = false) ProductCategory category,
             @RequestParam(required = false) String search,
@@ -44,9 +45,20 @@ public class ProductController {
         productQueryParams.setLimit(limit);
         productQueryParams.setOffset(offset);
 
+        // 去得 productList
         List<Product> productList = productService.getProducts(productQueryParams);
 
-        return ResponseEntity.status(HttpStatus.OK).body(productList);
+        // 取得總筆數
+        Integer total = productService.countProduct(productQueryParams);
+
+        // 分頁
+        Page<Product> page = new Page<>();
+        page.setLimit(limit);
+        page.setOffset(offset);
+        page.setTotal(total);
+        page.setResults(productList);
+
+        return ResponseEntity.status(HttpStatus.OK).body(page);
     }
 
 
