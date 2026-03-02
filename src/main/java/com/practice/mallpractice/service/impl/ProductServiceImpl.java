@@ -2,6 +2,7 @@ package com.practice.mallpractice.service.impl;
 
 import com.practice.mallpractice.constant.ProductCategory;
 import com.practice.mallpractice.dao.ProductDao;
+import com.practice.mallpractice.dto.ProductQueryParams;
 import com.practice.mallpractice.dto.ProductRequest;
 import com.practice.mallpractice.model.Product;
 import com.practice.mallpractice.service.ProductService;
@@ -17,8 +18,8 @@ public class ProductServiceImpl implements ProductService {
     private ProductDao productDao;
 
     @Override
-    public List<Product> getProducts(ProductCategory category, String search) {
-        return productDao.getProducts(category, search);
+    public List<Product> getProducts(ProductQueryParams productQueryParams) {
+        return productDao.getProducts(productQueryParams);
     }
 
     @Override

@@ -1,12 +1,11 @@
 package com.practice.mallpractice.dao.impl;
 
-import com.practice.mallpractice.constant.ProductCategory;
 import com.practice.mallpractice.dao.ProductDao;
+import com.practice.mallpractice.dto.ProductQueryParams;
 import com.practice.mallpractice.dto.ProductRequest;
 import com.practice.mallpractice.model.Product;
 import com.practice.mallpractice.rowmapper.ProductRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -25,21 +24,24 @@ public class ProductDaoImpl implements ProductDao {
     NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public List<Product> getProducts(ProductCategory category, String search) {
+    public List<Product> getProducts(ProductQueryParams productQueryParams) {
         String sql = "SELECT product_id, product_name, category, image_url, price, stock, description, " +
                 "created_date, last_modified_date FROM product WHERE 1=1";
 
         Map<String, Object> map = new HashMap<>();
 
-        if (category != null){
+        if (productQueryParams.getCategory() != null){
             sql = sql + " AND category = :category";
-            map.put("category", category.name()); // 轉換成字串
+            map.put("category", productQueryParams.getCategory().name()); // 轉換成字串
         }
 
-        if (search != null){
+        if (productQueryParams.getSearch() != null){
             sql = sql + " AND product_name LIKE :search";
-            map.put("search", "%" + search + "%"); // 前後加上百分比
+            map.put("search", "%" + productQueryParams.getSearch() + "%"); // 前後加上百分比
         }
+
+        // 有default value
+        sql = sql + " ORDER BY " + productQueryParams.getOrderBy() + " " + productQueryParams.getSort();
 
         List<Product> productList= namedParameterJdbcTemplate.query(sql, map, new ProductRowMapper());
 
