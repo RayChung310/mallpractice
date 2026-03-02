@@ -1,5 +1,6 @@
 package com.practice.mallpractice.controller;
 
+import com.practice.mallpractice.constant.ProductCategory;
 import com.practice.mallpractice.dto.ProductRequest;
 import com.practice.mallpractice.model.Product;
 import com.practice.mallpractice.service.ProductService;
@@ -9,12 +10,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
+    // 查詢商品列表
+    @GetMapping("/products")
+    public ResponseEntity<List<Product>> getProducts(
+            @RequestParam(required = false) ProductCategory category,
+            @RequestParam(required = false) String search
+    ){
+        List<Product> productList = productService.getProducts(category, search);
+
+        return ResponseEntity.status(HttpStatus.OK).body(productList);
+    }
+
+
+    // 查詢商品
     @GetMapping("/products/{productId}")
     public ResponseEntity<Product> getProduct(
             @PathVariable Integer productId) {
@@ -26,6 +42,7 @@ public class ProductController {
         }
     }
 
+    // 新增商品
     @PostMapping("/products")
     public ResponseEntity<Product> postProduct(@RequestBody @Valid ProductRequest productRequest) {
         Integer productId = productService.createProduct(productRequest);
@@ -35,6 +52,7 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.CREATED).body(product);
     }
 
+    // 修改商品
     @PutMapping("/products/{productId}")
     public ResponseEntity<Product> updateProductID(@PathVariable Integer productId,
                                                    @RequestBody @Valid ProductRequest productRequest) {
@@ -53,6 +71,7 @@ public class ProductController {
     }
 
 
+    // 刪除商品
     @DeleteMapping("/products/{productId}")
     public ResponseEntity<?> deleteProductId(@PathVariable Integer productId) {
         productService.deleteProductById(productId);
