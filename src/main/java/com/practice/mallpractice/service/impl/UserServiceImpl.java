@@ -1,6 +1,7 @@
 package com.practice.mallpractice.service.impl;
 
 import com.practice.mallpractice.dao.UserDao;
+import com.practice.mallpractice.dto.UserLoginRequest;
 import com.practice.mallpractice.dto.UserRegisterRequest;
 import com.practice.mallpractice.model.User;
 import com.practice.mallpractice.service.UserService;
@@ -35,5 +36,22 @@ public class UserServiceImpl implements UserService {
 
         // 創新的帳號
         return userDao.createUser(userRegisterRequest);
+    }
+
+    @Override
+    public User login(UserLoginRequest userLoginRequest) {
+        User user = userDao.getUserByEmail(userLoginRequest.getEmail());
+
+        if (user == null) {
+            log.warn("該email {} 尚未被註冊", userLoginRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        if (user.getPassword().equals(userLoginRequest.getPassword())){
+            return user;
+        } else {
+            log.warn("email {} 密碼不正確", userLoginRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 }
