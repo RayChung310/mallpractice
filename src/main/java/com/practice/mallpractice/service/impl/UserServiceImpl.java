@@ -4,9 +4,13 @@ import com.practice.mallpractice.dao.UserDao;
 import com.practice.mallpractice.dto.UserRegisterRequest;
 import com.practice.mallpractice.model.User;
 import com.practice.mallpractice.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
 
+@Slf4j
 @Component
 public class UserServiceImpl implements UserService {
 
@@ -20,6 +24,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer register(UserRegisterRequest userRegisterRequest) {
+
+        User user= userDao.getUserByEmail(userRegisterRequest.getEmail());
+
+        // 註冊過email
+        if (user != null){
+            log.warn("該email {} 已經被註冊", userRegisterRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        // 創新的帳號
         return userDao.createUser(userRegisterRequest);
     }
 }

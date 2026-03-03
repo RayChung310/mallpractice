@@ -1,5 +1,6 @@
 package com.practice.mallpractice.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 public class UserRegisterRequest {
 
     @NotBlank
+    @Email
     private String email;
 
     @NotBlank
