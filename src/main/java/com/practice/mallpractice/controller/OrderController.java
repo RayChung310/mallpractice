@@ -1,6 +1,7 @@
 package com.practice.mallpractice.controller;
 
 import com.practice.mallpractice.dto.CreateOrderRequset;
+import com.practice.mallpractice.model.Order;
 import com.practice.mallpractice.service.OrderService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class OrderController {
 
         Integer orderId = orderService.createOrder(userId, createOrderRequset);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderId);
+        Order order = orderService.getOrderById(orderId);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
 }

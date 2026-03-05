@@ -4,6 +4,7 @@ import com.practice.mallpractice.dao.OrderDao;
 import com.practice.mallpractice.dao.ProductDao;
 import com.practice.mallpractice.dto.BuyItem;
 import com.practice.mallpractice.dto.CreateOrderRequset;
+import com.practice.mallpractice.model.Order;
 import com.practice.mallpractice.model.OrderItem;
 import com.practice.mallpractice.model.Product;
 import com.practice.mallpractice.service.OrderService;
@@ -22,6 +23,17 @@ public class OrderServiceImpl implements OrderService {
     private OrderDao orderDao;
     @Autowired
     private ProductDao productDao;
+
+    @Override
+    public Order getOrderById(Integer orderId) {
+        Order order = orderDao.getOrderById(orderId);
+
+        List<OrderItem> orderItemList = orderDao.getOrderItemsByOrderId(orderId);
+
+        order.setOrderItemList(orderItemList);
+
+        return order;
+    }
 
     @Transactional
     @Override
