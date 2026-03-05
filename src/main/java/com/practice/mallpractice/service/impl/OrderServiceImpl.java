@@ -5,6 +5,7 @@ import com.practice.mallpractice.dao.ProductDao;
 import com.practice.mallpractice.dao.UserDao;
 import com.practice.mallpractice.dto.BuyItem;
 import com.practice.mallpractice.dto.CreateOrderRequset;
+import com.practice.mallpractice.dto.OrderQueryParams;
 import com.practice.mallpractice.model.Order;
 import com.practice.mallpractice.model.OrderItem;
 import com.practice.mallpractice.model.Product;
@@ -31,6 +32,24 @@ public class OrderServiceImpl implements OrderService {
     private ProductDao productDao;
     @Autowired
     private UserDao userDao;
+
+    @Override
+    public Integer countOrder(OrderQueryParams orderQueryParams){
+        return orderDao.countOrder(orderQueryParams);
+    }
+
+    @Override
+    public List<Order> getOrders(OrderQueryParams orderQueryParams) {
+        List<Order> orderList = orderDao.getOrders(orderQueryParams);
+
+        for (Order order : orderList){
+            List<OrderItem> orderItemList = orderDao.getOrderItemsByOrderId(order.getOrderId());
+
+            order.setOrderItemList(orderItemList);
+        }
+
+        return orderList;
+    }
 
     @Override
     public Order getOrderById(Integer orderId) {

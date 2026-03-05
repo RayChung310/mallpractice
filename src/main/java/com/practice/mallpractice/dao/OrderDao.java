@@ -1,11 +1,16 @@
 package com.practice.mallpractice.dao;
 
+import com.practice.mallpractice.dto.OrderQueryParams;
 import com.practice.mallpractice.model.Order;
 import com.practice.mallpractice.model.OrderItem;
 
 import java.util.List;
 
 public interface OrderDao {
+
+    Integer countOrder(OrderQueryParams orderQueryParams);
+
+    List<Order> getOrders(OrderQueryParams orderQueryParams);
 
     Order getOrderById(Integer orderId);
 
